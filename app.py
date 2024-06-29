@@ -1,12 +1,11 @@
-import os
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_file
 import google.generativeai as genai
 import fitz  # PyMuPDF
+import os
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
-
 
 app = Flask(__name__)
 
@@ -36,14 +35,15 @@ def upload_resume():
         resume_file.save(resume_path)
 
         # Extract text from the uploaded resume
-        resume_text = extract_text_from_pdf(resume_path)
+        original_resume_text = extract_text_from_pdf(resume_path)
 
         # Define the prompt for professional rewriting
-        prompt = """
-        Please rewrite the following resume in a professional and polished manner, using strong action verbs and emphasizing relevant skills and achievements. Ensure the format is clean and suitable for a job application.
+        prompt = """Please rewrite the following resume in a professional and polished manner, using strong action 
+        verbs and emphasizing relevant skills and achievements. Ensure the format is clean and suitable for a job 
+        application.
 
-        Here is the resume text:
-        """ + resume_text
+        Here is the original resume text:
+        """ + original_resume_text
 
         # Initialize the GenerativeModel
         model = genai.GenerativeModel()
@@ -51,8 +51,12 @@ def upload_resume():
         # Generate content based on the combined input
         response = model.generate_content(prompt)
 
-        # Return the rewritten resume text
-        return render_template('result.html', rewritten_resume=response.text)
+        # Save rewritten resume text to a variable
+        rewritten_resume_text = response.text
+
+        # Render template with both original and rewritten resume
+        return render_template('result.html', original_resume=original_resume_text,
+                               rewritten_resume=rewritten_resume_text)
 
     return render_template('upload.html')
 
