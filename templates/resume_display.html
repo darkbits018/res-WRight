@@ -4,37 +4,145 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Display</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styles */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        /* Header */
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #00437a;
+        }
+
+        /* Section Titles */
+        h2 {
+            border-bottom: 2px solid #daeaf6;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            color: #00437a;
+        }
+
+        /* Subsection Titles */
+        h3 {
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: #0056b3;
+        }
+
+        /* Paragraph and Text Styles */
+        p {
+            margin-bottom: 10px;
+        }
+
+        /* Strong Elements */
+        strong {
+            color: #333;
+        }
+
+        /* Lists */
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Contact and Skills Sections */
+        .contact-info, .skills {
+            margin-bottom: 20px;
+        }
+
+        /* Skills Subsections */
+        .skills-subsection {
+            margin-bottom: 10px;
+        }
+
+        /* Footer (optional styling) */
+        footer {
+            text-align: center;
+            padding-top: 20px;
+            color: #777;
+            font-size: 0.9em;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h2, h3 {
+                font-size: 18px;
+            }
+        }
+    </style>
 </head>
 <body>
-<h1>Resume</h1>
-<p><strong>Name:</strong> {{ resume['name'] }}</p>
-<p><strong>Email:</strong> {{ resume['contact']['email'] }}</p>
-<p><strong>Phone:</strong> {{ resume['contact']['phone'] }}</p>
-<p><strong>GitHub:</strong> {{ resume['contact']['github'] }}</p>
-<p><strong>LinkedIn:</strong> {{ resume['contact']['linkedin'] }}</p>
-<p><strong>Career Objective:</strong> {{ resume['career_objective'] }}</p>
+    <div class="container">
+        <h1>Resume</h1>
+        <div class="contact-info">
+            <p><strong>Name:</strong> {{ resume['name'] }}</p>
+            <p><strong>Email:</strong> {{ resume['contact']['email'] }}</p>
+            <p><strong>Phone:</strong> {{ resume['contact']['phone'] }}</p>
+            <p><strong>GitHub:</strong> {{ resume['contact']['github'] }}</p>
+            <p><strong>LinkedIn:</strong> {{ resume['contact']['linkedin'] }}</p>
+        </div>
 
-<h2>Education</h2>
-{% for edu in resume['education'] %}
-    <p><strong>{{ edu['degree'] }}</strong> from {{ edu['institution'] }}</p>
-{% endfor %}
+        <p><strong>Career Objective:</strong> {{ resume['career_objective'] }}</p>
 
-<h2>Work Experience</h2>
-{% for experience in resume['workExperience'] %}
-    <h3>{{ experience['title'] }} at {{ experience['company'] }} ({{ experience['yearsOfExperience'] }} years)</h3>
-    <ul>
-        {% for responsibility in experience['responsibilities'] %}
-            <li>{{ responsibility }}</li>
+        <h2>Education</h2>
+        {% for edu in resume['education'] %}
+            <p><strong>{{ edu['degree'] }}</strong> from {{ edu['institution'] }}</p>
         {% endfor %}
-    </ul>
-{% endfor %}
 
-<h2>Skills</h2>
-<p><strong>Programming Languages:</strong> {{ ', '.join(resume['skills']['programmingLanguages']) }}</p>
-<p><strong>Web Technology:</strong> {{ ', '.join(resume['skills']['Web technology']) }}</p>
-<p><strong>Frontend:</strong> {{ ', '.join(resume['skills']['frontend']) }}</p>
-<p><strong>Backend:</strong> {{ ', '.join(resume['skills']['backend']) }}</p>
-<p><strong>Database:</strong> {{ ', '.join(resume['skills']['database']) }}</p>
+        <h2>Work Experience</h2>
+        {% for experience in resume['workExperience'] %}
+            <h3>{{ experience['title'] }} at {{ experience['company'] }} ({{ experience['yearsOfExperience'] }} years)</h3>
+            <ul>
+                {% for responsibility in experience['responsibilities'] %}
+                    <li>{{ responsibility }}</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
 
+        <h2>Skills</h2>
+        <div class="skills">
+            <p class="skills-subsection"><strong>Programming Languages:</strong> {{ ', '.join(resume['skills']['programmingLanguages']) }}</p>
+            <p class="skills-subsection"><strong>Web Technology:</strong> {{ ', '.join(resume['skills']['Web technology']) }}</p>
+            <p class="skills-subsection"><strong>Frontend:</strong> {{ ', '.join(resume['skills']['frontend']) }}</p>
+            <p class="skills-subsection"><strong>Backend:</strong> {{ ', '.join(resume['skills']['backend']) }}</p>
+            <p class="skills-subsection"><strong>Database:</strong> {{ ', '.join(resume['skills']['database']) }}</p>
+        </div>
+    </div>
+    <footer>
+        <p>Created with ❤️ by {{ resume['name'] }}</p>
+    </footer>
 </body>
 </html>
