@@ -3,3 +3,4 @@ google-generativeai
 PyMuPDF
 python-dotenv
 Werkzeug
+gunicorn==19.7.1
