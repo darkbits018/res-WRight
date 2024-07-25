@@ -144,11 +144,59 @@ def submit():
     data_sentences_str = "\n".join(data_sentences)
 
     # Define the prompt for professional rewriting
-    prompt = f""" Please create a professional resume in JSON format (without the code blocks) using the following information:
+    prompt = f""" 
+    Please create a professional resume in JSON format using the following information:
+
     {data_sentences_str}
-    Make sure to use strong action verbs and include a career objective or professional summary based on the work 
-    experience in 5 sentences. While writing bullet points for work experiences, use technical terms based on the year of 
-    experience in the role. Categorize the given skills."""
+
+    **Guidelines:**
+
+    - **Career Objective/Professional Summary:** Craft a concise and compelling 5-sentence summary highlighting your key 
+    skills, experience, and career aspirations based on the provided information. 
+    - **Action Verbs:** Utilize strong action verbs to describe your responsibilities and achievements in each work experience. 
+    - **Technical Terms:** Incorporate relevant technical terms and industry-specific jargon based on the years of experience in each role. 
+    - **Skill Categorization:**  Categorize the skills mentioned in the data into "programmingLanguages", "Web technology", "frontend" , "backend", "database".
+
+    **JSON Format:**
+    ```json
+    {{
+    "name": "",
+    "contact": {{
+        "phone": "",
+        "email": "",
+        "linkedin": "",
+        "github": ""
+    }},
+    "career_objective": "",
+    "professional_summary": "",
+    "workExperience": [
+     {{
+        "company": "",
+        "title": "",
+        "yearsOfExperience": "",
+        "responsibilities": []
+    }}
+    ],
+    "education": [
+        {{
+        "institution": "",
+        "degree": "",
+        "yearsOfExperience": ""
+        }}
+    ],
+    "skills": {{
+        "programmingLanguages": [],
+        "Web technology": [],
+        "frontend": [],
+        "backend": [],
+        "database": []
+        }}
+    }}
+    **Output:**
+
+    Please provide the JSON resume in the specified format, **without** using code blocks. **Ensure the professional 
+    summary and responsibilities are detailed and use technical terms relevant to the roles.**
+"""
     # Replace multiple newlines with single newline
     prompt = " ".join(prompt.splitlines())
 
@@ -163,6 +211,13 @@ def submit():
     # Save rewritten resume text to a variable
     rewritten_resume_text = response.text
 
+    print(rewritten_resume_text)
+    # Convert the JSON string to a Python dictionary
+    resume_data = json.loads(rewritten_resume_text)
+
+    # Print the JSON structure
+    # print(json.dumps(resume_data, indent=4))
+
     # Print to console or handle the data as needed
     # print("Name:", name)
     # print("Email:", email)
@@ -170,11 +225,12 @@ def submit():
     # print("Skills:", skills)
     # print("Work Experience:", work_experience)
     # print("Education:", education)
-    print(rewritten_resume_text)
+
     # print(response)
 
     # return render_template('onboardResult.html', rewritten_resume_text=rewritten_resume_text)
-    return "Form submitted successfully!"
+    # return "Form submitted successfully!"
+    return render_template('resume_display.html', resume=resume_data)
 
 
 if __name__ == '__main__':

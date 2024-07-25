@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Display</title>
+</head>
+<body>
+<h1>Resume</h1>
+<p><strong>Name:</strong> {{ resume['name'] }}</p>
+<p><strong>Email:</strong> {{ resume['contact']['email'] }}</p>
+<p><strong>Phone:</strong> {{ resume['contact']['phone'] }}</p>
+<p><strong>GitHub:</strong> {{ resume['contact']['github'] }}</p>
+<p><strong>LinkedIn:</strong> {{ resume['contact']['linkedin'] }}</p>
+<p><strong>Career Objective:</strong> {{ resume['career_objective'] }}</p>
+
+<h2>Education</h2>
+{% for edu in resume['education'] %}
+    <p><strong>{{ edu['degree'] }}</strong> from {{ edu['institution'] }}</p>
+{% endfor %}
+
+<h2>Work Experience</h2>
+{% for experience in resume['workExperience'] %}
+    <h3>{{ experience['title'] }} at {{ experience['company'] }} ({{ experience['yearsOfExperience'] }} years)</h3>
+    <ul>
+        {% for responsibility in experience['responsibilities'] %}
+            <li>{{ responsibility }}</li>
+        {% endfor %}
+    </ul>
+{% endfor %}
+
+<h2>Skills</h2>
+<p><strong>Programming Languages:</strong> {{ ', '.join(resume['skills']['programmingLanguages']) }}</p>
+<p><strong>Web Technology:</strong> {{ ', '.join(resume['skills']['Web technology']) }}</p>
+<p><strong>Frontend:</strong> {{ ', '.join(resume['skills']['frontend']) }}</p>
+<p><strong>Backend:</strong> {{ ', '.join(resume['skills']['backend']) }}</p>
+<p><strong>Database:</strong> {{ ', '.join(resume['skills']['database']) }}</p>
+
+</body>
+</html>
