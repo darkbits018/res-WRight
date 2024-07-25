@@ -113,6 +113,11 @@ def onboard_user():
 
 @app.route('/submit', methods=['POST'])
 def submit():
+    def generate_resume(prompt):
+        model = genai.GenerativeModel()
+        response = model.generate_content(prompt)
+        return response.text
+
     name = request.form.get('name')
     email = request.form.get('email')
     phone = request.form.get('phone')
@@ -202,35 +207,30 @@ def submit():
 
     print(prompt)
 
-    # Initialize the GenerativeModel
-    model = genai.GenerativeModel()
+    max_attempts = 3
+    attempt = 0
+    while attempt < max_attempts:
+        try:
+            # Generate content based on the combined input
+            rewritten_resume_text = generate_resume(prompt)
 
-    # Generate content based on the combined input
-    response = model.generate_content(prompt)
+            # Convert the JSON string to a Python dictionary
+            resume_data = json.loads(rewritten_resume_text)
 
-    # Save rewritten resume text to a variable
-    rewritten_resume_text = response.text
+            # Render the result in the template
+            return render_template('resume_display.html', resume=resume_data)
 
-    print(rewritten_resume_text)
-    # Convert the JSON string to a Python dictionary
-    resume_data = json.loads(rewritten_resume_text)
+        except json.decoder.JSONDecodeError:
+            attempt += 1
+            print(f"Attempt {attempt} failed: Failed to decode JSON. Retrying...")
+            if attempt >= max_attempts:
+                # Provide feedback to the user after maximum attempts
+                return render_template('error.html',
+                                       message="Failed to generate a valid resume after multiple attempts. Please try "
+                                               "again later.")
 
-    # Print the JSON structure
-    # print(json.dumps(resume_data, indent=4))
-
-    # Print to console or handle the data as needed
-    # print("Name:", name)
-    # print("Email:", email)
-    # print("Phone:", phone)
-    # print("Skills:", skills)
-    # print("Work Experience:", work_experience)
-    # print("Education:", education)
-
-    # print(response)
-
-    # return render_template('onboardResult.html', rewritten_resume_text=rewritten_resume_text)
-    # return "Form submitted successfully!"
-    return render_template('resume_display.html', resume=resume_data)
+    # Should not reach here, but in case of an unexpected failure
+    return render_template('error.html', message="Unexpected error occurred. Please try again.")
 
 
 if __name__ == '__main__':
